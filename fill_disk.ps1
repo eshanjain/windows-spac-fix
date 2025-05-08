@@ -5,23 +5,37 @@ $drive = Get-PSDrive -Name C
 $freeMBBefore = [math]::Round($drive.Free / 1MB)
 Write-Host "[BEFORE] Free space on C: = $freeMBBefore MB"
 
-# Create 1GB file
+# Prepare to fill disk space
 $path = "C:\disk_fill.bin"
-$size = 1GB
 $buffer = New-Object byte[] 1MB
-$stream = [System.IO.File]::OpenWrite($path)
-for ($i = 0; $i -lt ($size / 1MB); $i++) {
-    $stream.Write($buffer, 0, $buffer.Length)
+$i = 0
+
+$stream = [System.IO.File]::Open($path, 'Create', 'Write')
+try {
+    while ($true) {
+        try {
+            $stream.Write($buffer, 0, $buffer.Length)
+            $stream.Flush()
+        } catch {
+            Write-Host "Disk full after writing $i MB."
+            break
+        }
+        $i++
+        if ($i % 100 -eq 0) {
+            Write-Host "Written $i MB so far..."
+        }
+    }
+} finally {
+    $stream.Close()
 }
-$stream.Close()
-Write-Host "Created 1GB file at $path"
+Write-Host "Created file at $path with size: $i MB"
 
 # Print free space AFTER
 $drive = Get-PSDrive -Name C
 $freeMBAfter = [math]::Round($drive.Free / 1MB)
 Write-Host "[AFTER] Free space on C: = $freeMBAfter MB"
 
-# List all files in C:\ with their size (in MB)
+# List all files in C:\ with their size
 Write-Host "`n[FILE LISTING in C:\]"
 Get-ChildItem -Path C:\ -Recurse -File -ErrorAction SilentlyContinue | 
     Select-Object FullName, @{Name="SizeMB";Expression={[math]::Round($_.Length / 1MB, 2)}} |
