@@ -36,7 +36,7 @@ $freeMBAfter = [math]::Round($drive.Free / 1MB)
 Write-Host "[AFTER] Free space on C: = $freeMBAfter MB"
 
 # List all files in C:\ with their size
-Write-Host "`n[FILE LISTING in C:\]"
+Write-Host "`n[FILE LISTING in "C:\codebuild\reverse\"]"
 Get-ChildItem -Path C:\ -Recurse -File -ErrorAction SilentlyContinue | 
     Select-Object FullName, @{Name="SizeMB";Expression={[math]::Round($_.Length / 1MB, 2)}} |
     Format-Table -AutoSize
