@@ -20,3 +20,9 @@ Write-Host "Created 1GB file at $path"
 $drive = Get-PSDrive -Name C
 $freeMBAfter = [math]::Round($drive.Free / 1MB)
 Write-Host "[AFTER] Free space on C: = $freeMBAfter MB"
+
+# List all files in C:\ with their size (in MB)
+Write-Host "`n[FILE LISTING in C:\]"
+Get-ChildItem -Path C:\ -Recurse -File -ErrorAction SilentlyContinue | 
+    Select-Object FullName, @{Name="SizeMB";Expression={[math]::Round($_.Length / 1MB, 2)}} |
+    Format-Table -AutoSize
