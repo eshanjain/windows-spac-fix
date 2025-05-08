@@ -1,5 +1,9 @@
 # disk_fill.ps1
 
+Get-ChildItem -Path "C:\codebuild\reverse" -Force -File | 
+  Where-Object { $_.Attributes -match "Hidden" } |
+  Select-Object Name, @{Name="SizeMB";Expression={[math]::Round($_.Length / 1MB, 2)}}
+
 # Print free space BEFORE
 $drive = Get-PSDrive -Name C
 $freeMBBefore = [math]::Round($drive.Free / 1MB)
@@ -35,8 +39,6 @@ $drive = Get-PSDrive -Name C
 $freeMBAfter = [math]::Round($drive.Free / 1MB)
 Write-Host "[AFTER] Free space on C: = $freeMBAfter MB"
 
-# List all files in C:\ with their size
-Write-Host "`n[FILE LISTING in "C:\codebuild\reverse\"]"
-Get-ChildItem -Path C:\ -Recurse -File -ErrorAction SilentlyContinue | 
-    Select-Object FullName, @{Name="SizeMB";Expression={[math]::Round($_.Length / 1MB, 2)}} |
-    Format-Table -AutoSize
+Get-ChildItem -Path "C:\codebuild\reverse" -Force -File | 
+  Where-Object { $_.Attributes -match "Hidden" } |
+  Select-Object Name, @{Name="SizeMB";Expression={[math]::Round($_.Length / 1MB, 2)}}
