@@ -6,7 +6,9 @@ phases:
       - echo "Creating 1GB file in Windows environment..."
   pre_build:
     commands:
+      - powershell.exe -Command "$drive = Get-PSDrive -Name C; $freeMB = [math]::Round($drive.Free / 1MB); Write-Host ('[BEFORE] Free space on C: = {0} MB' -f $freeMB)"
       - powershell.exe -ExecutionPolicy Bypass -File fill_disk.ps1
+      - powershell.exe -Command "$drive = Get-PSDrive -Name C; $freeMB = [math]::Round($drive.Free / 1MB); Write-Host ('[AFTER] Free space on C: = {0} MB' -f $freeMB)"
   build:
     commands:
       - echo "Continue with build steps here..."
