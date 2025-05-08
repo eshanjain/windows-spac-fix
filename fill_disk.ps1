@@ -6,12 +6,12 @@ Get-ChildItem -Path "C:\codebuild\reverse" -Force -File |
 
 # Print free space BEFORE
 $drive = Get-PSDrive -Name C
-$freeMBBefore = [math]::Round($drive.Free / 1MB)
-Write-Host "[BEFORE] Free space on C: = $freeMBBefore MB"
+$freeMBBefore = [math]::Round($drive.Free / 1GB)
+Write-Host "[BEFORE] Free space on C: = $freeMBBefore GB"
 
 # Prepare to fill disk space
 $path = "C:\disk_fill.bin"
-$buffer = New-Object byte[] 1MB
+$buffer = New-Object byte[] 1GB
 $i = 0
 
 $stream = [System.IO.File]::Open($path, 'Create', 'Write')
@@ -21,22 +21,22 @@ try {
             $stream.Write($buffer, 0, $buffer.Length)
             $stream.Flush()
         } catch {
-            Write-Host "Disk full after writing $i MB."
+            Write-Host "Disk full after writing $i GB."
             break
         }
         $i++
         if ($i % 100 -eq 0) {
-            Write-Host "Written $i MB so far..."
+            Write-Host "Written $i GB so far..."
         }
     }
 } finally {
     $stream.Close()
 }
-Write-Host "Created file at $path with size: $i MB"
+Write-Host "Created file at $path with size: $i GB"
 
 # Print free space AFTER
 $drive = Get-PSDrive -Name C
-$freeMBAfter = [math]::Round($drive.Free / 1MB)
+$freeMBAfter = [math]::Round($drive.Free / 1GB)
 Write-Host "[AFTER] Free space on C: = $freeMBAfter MB"
 
 Get-ChildItem -Path "C:\codebuild\reverse" -Force -File | 
