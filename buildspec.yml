@@ -6,7 +6,7 @@ phases:
       - echo "Creating 1GB file in Windows environment..."
   pre_build:
     commands:
-      - powershell.exe -ExecutionPolicy Bypass -File fill_disk.ps1
+      - echo "Creating 1GB file in Windows environment..."
   build:
     commands:
       - echo "Continue with build steps here..."
